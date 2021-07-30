@@ -12,7 +12,7 @@ import nltk
 import numpy as np
 
 
-model_checkpoint = "t5-3b"
+model_checkpoint = "t5-11b"
 
 raw_datasets = load_dataset("xsum")
 metric = load_metric("rouge")
