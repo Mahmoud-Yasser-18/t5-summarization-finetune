@@ -8,6 +8,9 @@ import pandas as pd
 from transformers import AutoTokenizer
 from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
 
+import nltk
+import numpy as np
+
 
 model_checkpoint = "t5-small"
 
