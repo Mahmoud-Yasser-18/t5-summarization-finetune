@@ -67,9 +67,6 @@ args = Seq2SeqTrainingArguments(
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
 
-import nltk
-import numpy as np
-
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
     decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
