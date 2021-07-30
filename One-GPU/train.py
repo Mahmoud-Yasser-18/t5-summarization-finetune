@@ -12,7 +12,7 @@ import nltk
 import numpy as np
 
 
-model_checkpoint = "t5-small"
+model_checkpoint = "t5-3b"
 
 raw_datasets = load_dataset("xsum")
 metric = load_metric("rouge")
@@ -44,22 +44,29 @@ tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
 
 
-batch_size = 8
+batch_size = 14
 model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
+
+    # 
     "test-summarization",
     overwrite_output_dir=True,
     evaluation_strategy ='steps',
     eval_steps = 10, # Evaluation and Save happens every 10 steps
-    save_total_limit = 1, # Only last 1 models are saved. Older ones are deleted.
+    save_total_limit = 2, # Only last 1 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     per_device_train_batch_size=batch_size,
-    per_device_eval_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size/2,
 
+    # optimizer:
     learning_rate=3e-5,
     weight_decay=3e-7,
     adam_epsilon=1e-8,
     adam_beta1=0.9,
+
+    # Schedular
+    warmup_steps=500,
+
 
     num_train_epochs=1,
     predict_with_generate=True,
@@ -105,3 +112,4 @@ trainer = Seq2SeqTrainer(
 
 
 trainer.train()
+model.save_pretrained("./best_model",save_config=True)    
