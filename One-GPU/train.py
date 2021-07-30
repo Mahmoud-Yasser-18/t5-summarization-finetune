@@ -52,8 +52,8 @@ args = Seq2SeqTrainingArguments(
     "test-summarization",
     overwrite_output_dir=True,
     evaluation_strategy ='steps',
-    eval_steps = 10, # Evaluation and Save happens every 10 steps
-    save_total_limit = 2, # Only last 1 models are saved. Older ones are deleted.
+    eval_steps = 5, # Evaluation and Save happens every 10 steps
+    save_total_limit = 1, # Only last 1 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size/2,
