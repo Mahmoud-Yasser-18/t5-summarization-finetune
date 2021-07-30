@@ -53,10 +53,14 @@ args = Seq2SeqTrainingArguments(
     eval_steps = 10, # Evaluation and Save happens every 10 steps
     save_total_limit = 1, # Only last 1 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
-    learning_rate=2e-5,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
-    weight_decay=0.01,
+
+    learning_rate=3e-5,
+    weight_decay=3e-7,
+    adam_epsilon=1e-8,
+    adam_beta1=0.9,
+
     num_train_epochs=1,
     predict_with_generate=True,
     fp16=True,
