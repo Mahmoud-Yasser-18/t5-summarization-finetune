@@ -3,6 +3,8 @@
 import datasets
 import random
 import transformers
+import os
+import sys
 from datasets import load_dataset, load_metric
 import pandas as pd
 from transformers import AutoTokenizer
@@ -17,7 +19,7 @@ model_checkpoint = "t5-11b"
 raw_datasets = load_dataset("xsum")
 metric = load_metric("rouge")
 
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-cache/")
 
 if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
     prefix = "summarize: "
