@@ -18,7 +18,7 @@ import numpy as np
 
 model_checkpoint = "t5-11b"
 
-raw_datasets = load_dataset("xsum")
+raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
 
 tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-cache/")
