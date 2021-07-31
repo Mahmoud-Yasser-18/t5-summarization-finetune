@@ -48,7 +48,7 @@ tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
 
 
-batch_size = 14
+batch_size = 8
 model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
