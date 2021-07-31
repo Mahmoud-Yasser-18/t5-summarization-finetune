@@ -73,7 +73,7 @@ args = Seq2SeqTrainingArguments(
     num_train_epochs=1,
     predict_with_generate=True,
     fp16=True,
-    deepspeed="./deepspeed-zero2-one-gpu.json"
+    deepspeed="./deepspeed-zero3-one-gpu.json"
 )
 
 
