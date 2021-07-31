@@ -21,7 +21,7 @@ model_checkpoint = "t5-11b"
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
 
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-cache/")
+tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
 if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
     prefix = "summarize: "
@@ -45,7 +45,7 @@ def preprocess_function(examples):
 
 tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 
-model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 
 batch_size = 8
