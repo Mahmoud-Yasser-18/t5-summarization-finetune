@@ -58,7 +58,7 @@ args = Seq2SeqTrainingArguments(
     save_total_limit = 1, # Only last 1 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     per_device_train_batch_size=batch_size,
-    per_device_eval_batch_size=batch_size/2,
+    per_device_eval_batch_size=batch_size,
 
     # optimizer:
     learning_rate=3e-5,
