@@ -23,6 +23,8 @@ metric = load_metric("rouge")
 
 tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
+model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+
 if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
     prefix = "summarize: "
 else:
@@ -45,10 +47,9 @@ def preprocess_function(examples):
 
 tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 
-model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 
-batch_size = 8
+batch_size = 2
 model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
