@@ -1,3 +1,5 @@
 #!/bin/sh
+bash ./requirements.sh
 cd ./One-GPU/ 
-bash main.sh
+deepspeed ./train.py --deepspeed ./deepspeed-zero3-one-gpu.json
+

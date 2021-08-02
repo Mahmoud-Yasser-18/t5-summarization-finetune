@@ -10,7 +10,6 @@ pip install sentencepiece
 pip install datasets==1.11.0
 pip install pandas==1.1.5
 
-git clone https://github.com/huggingface/transformers
 cd transformers
 pip install .
 cd ..
@@ -21,6 +20,7 @@ pip install nltk==3.2.5
 
 git clone https://github.com/microsoft/DeepSpeed/
 cd DeepSpeed
+pip install .
 
 
 cd ..
