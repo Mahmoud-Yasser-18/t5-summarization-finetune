@@ -1,3 +1,3 @@
 #!/bin/sh
-cd ./t5-summarization-finetune/One-GPU/ 
+cd ./One-GPU/ 
 bash main.sh
