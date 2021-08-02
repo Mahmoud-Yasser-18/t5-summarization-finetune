@@ -71,7 +71,8 @@ from ..xlm.tokenization_xlm import XLMTokenizer
 from .configuration_auto import (
     AutoConfig,
     T5Config,
-    replace_list_option_in_docstrings
+    replace_list_option_in_docstrings,
+    EncoderDecoderConfig
 )
 
 
