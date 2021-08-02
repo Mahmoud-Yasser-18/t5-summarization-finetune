@@ -80,6 +80,7 @@ args = Seq2SeqTrainingArguments(
     num_train_epochs=1,
     predict_with_generate=True,
     fp16=True,
+    remove_unused_columns = False,
     deepspeed="./deepspeed-zero3-one-gpu.json"
 )
 
