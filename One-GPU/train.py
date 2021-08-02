@@ -9,7 +9,7 @@ from datasets import load_dataset, load_metric
 import pandas as pd
 from transformers import AutoTokenizer
 from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
-
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 import nltk
 nltk.download('punkt')
 
@@ -21,9 +21,9 @@ model_checkpoint = "t5-11b"
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
 
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
-model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
     prefix = "summarize: "
@@ -54,7 +54,7 @@ model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
     # 
-    "test-summarization",
+    "./test-summarization",
     overwrite_output_dir=True,
     
     evaluation_strategy ='steps',
