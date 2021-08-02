@@ -19,7 +19,7 @@ from collections import OrderedDict
 
 from ...configuration_utils import PretrainedConfig
 from ..t5.configuration_t5 import T5_PRETRAINED_CONFIG_ARCHIVE_MAP, T5Config
-
+from ..encoder_decoder.configuration_encoder_decoder import EncoderDecoderConfig
 
 ALL_PRETRAINED_CONFIG_ARCHIVE_MAP = dict(
     (key, value)
