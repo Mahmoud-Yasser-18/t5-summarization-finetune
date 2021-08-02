@@ -69,7 +69,8 @@ from ..transfo_xl.tokenization_transfo_xl import TransfoXLTokenizer
 from ..wav2vec2.tokenization_wav2vec2 import Wav2Vec2CTCTokenizer
 from ..xlm.tokenization_xlm import XLMTokenizer
 from .configuration_auto import (
-    T5Config
+    T5Config,
+    replace_list_option_in_docstrings
 )
 
 
