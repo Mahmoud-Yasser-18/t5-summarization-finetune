@@ -17,14 +17,14 @@ nltk.download('punkt')
 import numpy as np
 
 
-model_checkpoint = "t5-11b"
+model_checkpoint = "t5-3b"
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
 
-tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-3b-tokenizer/")
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-3b-Model/")
     
 if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
     prefix = "summarize: "
