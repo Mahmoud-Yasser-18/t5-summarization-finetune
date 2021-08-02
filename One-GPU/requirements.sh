@@ -12,4 +12,12 @@ pip install pandas==1.1.5
 pip install git+https://github.com/huggingface/transformers
 pip install rouge-score==0.0.4
 pip install nltk==3.2.5 
-pip install deepspeed==0.4.4
+
+
+git clone https://github.com/microsoft/DeepSpeed/
+cd DeepSpeed
+rm -rf build
+TORCH_CUDA_ARCH_LIST="8.6" DS_BUILD_CPU_ADAM=1 DS_BUILD_UTILS=1 pip install . \
+--global-option="build_ext" --global-option="-j8" --no-cache -v \
+--disable-pip-version-check 2>&1 | tee build.log
+cd ..
