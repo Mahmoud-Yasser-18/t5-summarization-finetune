@@ -17,10 +17,10 @@ nltk.download('punkt')
 import numpy as np
 
 
-model_checkpoint = "t5-11b"
-tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
+model_checkpoint = "t5-3b"
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-3b-tokenizer/")
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-3b-Model/")
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
