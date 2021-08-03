@@ -31,7 +31,7 @@ if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
 else:
     prefix = ""
 
-max_input_length = 1024
+max_input_length = 512
 max_target_length = 128
 
 def preprocess_function(examples):
