@@ -17,11 +17,11 @@ nltk.download('punkt')
 import numpy as np
 
 
-model_checkpoint = "t5-small"
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-small-tokenizer/")
+model_checkpoint = "t5-11b"
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
-model = AutoModelForSeq2SeqLM.from_pretrained(model_checkpoint,cache_dir="./t5-small-Model/")
- 
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
 
@@ -59,11 +59,11 @@ args = Seq2SeqTrainingArguments(
     overwrite_output_dir=True,
     
     evaluation_strategy ='steps',
-    eval_steps = 100, # Evaluation and Save happens every 10 steps
+    eval_steps = 500, # Evaluation and Save happens every 10 steps
     save_total_limit = 1, # Only last 1 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     save_strategy="steps",
-    save_steps=100,  
+    save_steps=500,  
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
 
@@ -84,7 +84,7 @@ args = Seq2SeqTrainingArguments(
 )
 
 
-data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
+data_collator = DataCollatorForSeq2Seq(tokenizer, model=model,padding='longest')
 
 
 def compute_metrics(eval_pred):
@@ -108,7 +108,7 @@ def compute_metrics(eval_pred):
     
     return {k: round(v, 4) for k, v in result.items()}
 
-
+print (tokenized_datasets["train"])
 trainer = Seq2SeqTrainer(
     model,
     args,
