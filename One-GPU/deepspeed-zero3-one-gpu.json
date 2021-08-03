@@ -29,6 +29,7 @@
 
     "zero_optimization": {
         "stage": 3,
+        "allgather_bucket_size": 2e8,
         "offload_optimizer": {
             "device": "cpu",
             "pin_memory": true
@@ -43,8 +44,8 @@
         "reduce_bucket_size": "auto",
         "stage3_prefetch_bucket_size": "auto",
         "stage3_param_persistence_threshold": "auto",
-        "stage3_max_live_parameters": 1e9,
-        "stage3_max_reuse_distance": 1e9,
+        "stage3_max_live_parameters": 1e8,
+        "stage3_max_reuse_distance": 1e8,
         "stage3_gather_fp16_weights_on_model_save": true
     },
 
