@@ -50,7 +50,7 @@ tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 
 
 
-batch_size = 2
+batch_size = 1
 model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
@@ -72,7 +72,7 @@ args = Seq2SeqTrainingArguments(
     weight_decay=3e-7,
     adam_epsilon=1e-8,
     adam_beta1=0.9,
-
+    adam_beta2=0.999,
     # Schedular
     warmup_steps=500,
 
