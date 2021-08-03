@@ -17,10 +17,10 @@ nltk.download('punkt')
 import numpy as np
 
 
-model_checkpoint = "t5-3b"
-tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-3b-tokenizer/")
+model_checkpoint = "t5-11b"
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-3b-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
@@ -31,7 +31,7 @@ if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
 else:
     prefix = ""
 
-max_input_length = 512
+max_input_length = 1024
 max_target_length = 128
 
 def preprocess_function(examples):
