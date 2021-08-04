@@ -82,6 +82,7 @@ args = Seq2SeqTrainingArguments(
     deepspeed="./deepspeed-zero3-one-gpu.json"
 )
 
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model,padding='longest')
 
@@ -109,7 +110,6 @@ def compute_metrics(eval_pred):
 
 
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 print (tokenized_datasets["train"])
 trainer = Seq2SeqTrainer(
