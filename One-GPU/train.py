@@ -20,7 +20,6 @@ import numpy as np
 model_checkpoint = "t5-11b"
 tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
@@ -109,6 +108,8 @@ def compute_metrics(eval_pred):
     return {k: round(v, 4) for k, v in result.items()}
 
 print (tokenized_datasets["train"])
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+
 trainer = Seq2SeqTrainer(
     model,
     args,
