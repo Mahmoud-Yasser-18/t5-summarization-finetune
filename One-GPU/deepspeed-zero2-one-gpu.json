@@ -35,9 +35,10 @@
         },
         "allgather_partitions": true,
         "allgather_bucket_size": 2e5,
+        "sub_group_size": 1e5,
         "overlap_comm": true,
         "reduce_scatter": true,
-        "reduce_bucket_size": 2e5,
+        "reduce_bucket_size": 1e5,
         "contiguous_gradients": true
     },
 
