@@ -29,6 +29,8 @@
 
     "zero_optimization": {
         "stage": 3,
+        "allgather_bucket_size": 1e5,
+
         "offload_optimizer": {
             "device": "cpu",
             "pin_memory": true
