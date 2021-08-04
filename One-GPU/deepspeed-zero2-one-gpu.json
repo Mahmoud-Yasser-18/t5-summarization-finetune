@@ -34,10 +34,10 @@
             "pin_memory": true
         },
         "allgather_partitions": true,
-        "allgather_bucket_size": 2e7,
+        "allgather_bucket_size": 2e5,
         "overlap_comm": true,
         "reduce_scatter": true,
-        "reduce_bucket_size": 2e7,
+        "reduce_bucket_size": 2e5,
         "contiguous_gradients": true
     },
 
