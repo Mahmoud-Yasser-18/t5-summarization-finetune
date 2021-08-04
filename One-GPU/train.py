@@ -20,6 +20,7 @@ import numpy as np
 model_checkpoint = "t5-11b"
 tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
 
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
@@ -79,10 +80,9 @@ args = Seq2SeqTrainingArguments(
     num_train_epochs=1,
     predict_with_generate=True,
     fp16=True,
-    deepspeed="./deepspeed-zero3-one-gpu.json"
+    deepspeed="./deepspeed-zero2-one-gpu.json"
 )
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
 
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model,padding='longest')
 
