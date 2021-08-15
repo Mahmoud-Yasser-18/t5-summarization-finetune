@@ -31,7 +31,7 @@ if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
 else:
     prefix = ""
 
-max_input_length = 256
+max_input_length = 512
 max_target_length = 128
 
 def preprocess_function(examples):
@@ -50,7 +50,7 @@ tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 
 
 
-batch_size = 1
+batch_size = 4
 model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
@@ -60,7 +60,7 @@ args = Seq2SeqTrainingArguments(
     
     evaluation_strategy ='steps',
     eval_steps = 500, # Evaluation and Save happens every 10 steps
-    save_total_limit = 1, # Only last 1 models are saved. Older ones are deleted.
+    save_total_limit = 2, # Only last 2 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     save_strategy="steps",
     save_steps=500,  
@@ -75,12 +75,8 @@ args = Seq2SeqTrainingArguments(
     adam_beta2=0.999,
     # Schedular
     warmup_steps=500,
-
-
-    num_train_epochs=1,
+    num_train_epochs=2,
     predict_with_generate=True,
-    fp16=True,
-    deepspeed="./deepspeed-zero2-one-gpu.json"
 )
 
 
