@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+# !pip install datasets transformers SentencePiece SageMaker
+import wandb
 import datasets
 import random
 import transformers
@@ -11,21 +12,29 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
+
+
+
+
+
+
 import nltk
 nltk.download('punkt')
 
 import numpy as np
 
 
-model_checkpoint = "t5-11b"
-tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-11b-tokenizer/")
+model_checkpoint = "t5-small"
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-small-tokenizer/")
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-11b-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-small-Model/")
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
+raw_datasets['train']=raw_datasets['train'].select(range(100))
+raw_datasets['validation']=raw_datasets['validation'].select(range(100))
+raw_datasets['test']=raw_datasets['test'].select(range(100))
 
-   
 if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
     prefix = "summarize: "
 else:
@@ -47,6 +56,8 @@ def preprocess_function(examples):
 
 
 tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
+
+
 
 
 
@@ -75,7 +86,8 @@ args = Seq2SeqTrainingArguments(
     adam_beta2=0.999,
     # Schedular
     warmup_steps=500,
-    num_train_epochs=2,
+    num_train_epochs=100,
+    report_to="wandb",
     predict_with_generate=True,
 )
 
@@ -120,3 +132,5 @@ trainer = Seq2SeqTrainer(
 
 
 trainer.train()
+
+wandb.finish()
