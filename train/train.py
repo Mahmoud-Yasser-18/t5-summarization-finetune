@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# !pip install datasets transformers SentencePiece SageMaker
+os.system("pip install wandb nltk rouge_score datasets SentencePiece")
+
 import wandb
 import datasets
 import random
@@ -12,10 +13,23 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
+import argparse
+
+
+parser = argparse.ArgumentParser()
+
+# hyperparameters sent by the client are passed as command-line arguments to the script.
+parser.add_argument("--model-dir", type=int,default=os.environ["SM_MODEL_DIR"])
+parser.add_argument("--training_dir", type=str, default=os.environ["SM_CHANNEL_TRAIN"])
+parser.add_argument("--test_dir", type=str, default=os.environ["SM_CHANNEL_TEST"])
+script_args, _ = parser.parse_known_args()
 
 
 
-
+os.environ['WANDB_API_KEY'] = '87f1f4023fbed40e9c683e5f1d90c5b9bd68ddcf'
+os.environ['WANDB_PROJECT'] = 'huggingface-aws-t5'
+os.environ['TASK_NAME'] = 't5-small-trail'
+wandb.login()
 
 
 import nltk
@@ -68,7 +82,8 @@ args = Seq2SeqTrainingArguments(
     # 
     "test-summarization",
     overwrite_output_dir=True,
-    
+
+
     evaluation_strategy ='steps',
     eval_steps = 500, # Evaluation and Save happens every 10 steps
     save_total_limit = 2, # Only last 2 models are saved. Older ones are deleted.
@@ -79,16 +94,17 @@ args = Seq2SeqTrainingArguments(
     per_device_eval_batch_size=batch_size,
 
     # optimizer:
-    learning_rate=3e-5,
-    weight_decay=3e-7,
-    adam_epsilon=1e-8,
-    adam_beta1=0.9,
-    adam_beta2=0.999,
+    # learning_rate=3e-5,
+    # weight_decay=3e-7,
+    # adam_epsilon=1e-8,
+    # adam_beta1=0.9,
+    # adam_beta2=0.999,
     # Schedular
-    warmup_steps=500,
-    num_train_epochs=100,
+    # warmup_steps=500,
+    # num_train_epochs=100,
     report_to="wandb",
     predict_with_generate=True,
+    fp16=True
 )
 
 
@@ -130,7 +146,12 @@ trainer = Seq2SeqTrainer(
     compute_metrics=compute_metrics
 )
 
-
-trainer.train()
-
-wandb.finish()
+try:
+    trainer.train()
+    trainer.save_model(script_args.model_dir)
+except:
+    wandb.log("error happend while training")    
+finally:
+    wandb.finish()
+    # Saves the model to s3; default is /opt/ml/model which SageMaker sends to S3
+    
