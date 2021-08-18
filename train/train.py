@@ -20,15 +20,15 @@ parser = argparse.ArgumentParser()
 
 # hyperparameters sent by the client are passed as command-line arguments to the script.
 parser.add_argument("--model-dir", type=int,default=os.environ["SM_MODEL_DIR"])
-parser.add_argument("--training_dir", type=str, default=os.environ["SM_CHANNEL_TRAIN"])
-parser.add_argument("--test_dir", type=str, default=os.environ["SM_CHANNEL_TEST"])
+# parser.add_argument("--training_dir", type=str, default=os.environ["SM_CHANNEL_TRAIN"])
+# parser.add_argument("--test_dir", type=str, default=os.environ["SM_CHANNEL_TEST"])
 script_args, _ = parser.parse_known_args()
 
 
 
 os.environ['WANDB_API_KEY'] = '87f1f4023fbed40e9c683e5f1d90c5b9bd68ddcf'
 os.environ['WANDB_PROJECT'] = 'huggingface-aws-t5'
-os.environ['TASK_NAME'] = 't5-small-trail'
+os.environ['TASK_NAME'] = 't5-3b-trail'
 wandb.login()
 
 
@@ -38,10 +38,10 @@ nltk.download('punkt')
 import numpy as np
 
 
-model_checkpoint = "t5-small"
-tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-small-tokenizer/")
+model_checkpoint = "t5-3b"
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-tokenizer/")
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-small-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-3b-Model/")
 
 raw_datasets = load_dataset("xsum",cache_dir="./dataset")
 metric = load_metric("rouge")
@@ -49,10 +49,7 @@ raw_datasets['train']=raw_datasets['train'].select(range(100))
 raw_datasets['validation']=raw_datasets['validation'].select(range(100))
 raw_datasets['test']=raw_datasets['test'].select(range(100))
 
-if model_checkpoint in ["t5-small", "t5-base", "t5-larg", "t5-3b", "t5-11b"]:
-    prefix = "summarize: "
-else:
-    prefix = ""
+prefix = "summarize: "
 
 max_input_length = 512
 max_target_length = 128
