@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+import os
+
 os.system("pip install wandb nltk rouge_score datasets SentencePiece")
 
 import wandb
 import datasets
 import random
 import transformers
-import os
 import sys
 from datasets import load_dataset, load_metric
 import pandas as pd
