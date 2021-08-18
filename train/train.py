@@ -77,7 +77,7 @@ model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
     # 
-    "test-summarization",
+    output_dir=script_args.model_dir,
     overwrite_output_dir=True,
 
 
