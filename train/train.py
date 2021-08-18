@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 import os
 
-os.system("pip install wandb nltk rouge_score datasets SentencePiece")
+for i in range(1):
+    try:
+        os.system("pip install wandb nltk rouge_score datasets SentencePiece")
+        import wandb
+    except:
+        print ("it's okay")
 
-import wandb
+
+
 import datasets
 import random
 import transformers
+
 import sys
 from datasets import load_dataset, load_metric
 import pandas as pd
@@ -14,16 +21,16 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
-import argparse
+# import argparse
 
 
-parser = argparse.ArgumentParser()
+# parser = argparse.ArgumentParser()
 
 # hyperparameters sent by the client are passed as command-line arguments to the script.
-parser.add_argument("--model-dir", type=int,default=os.environ["SM_MODEL_DIR"])
+# parser.add_argument("--output_dir", type=int,default=os.environ["SM_MODEL_DIR"])
 # parser.add_argument("--training_dir", type=str, default=os.environ["SM_CHANNEL_TRAIN"])
 # parser.add_argument("--test_dir", type=str, default=os.environ["SM_CHANNEL_TEST"])
-script_args, _ = parser.parse_known_args()
+# script_args, _ = parser.parse_known_args()
 
 
 
@@ -34,17 +41,21 @@ wandb.login()
 
 
 import nltk
-nltk.download('punkt')
+for i in range(1):
+    try:
+        nltk.download('punkt')
+    except:
+        print ("it's okay")
 
 import numpy as np
 
 
 model_checkpoint = "t5-3b"
-tokenizer = T5Tokenizer.from_pretrained(model_checkpoint,cache_dir="./t5-tokenizer/")
+tokenizer = T5Tokenizer.from_pretrained(model_checkpoint)
 
-model = T5ForConditionalGeneration.from_pretrained(model_checkpoint,cache_dir="./t5-3b-Model/")
+model = T5ForConditionalGeneration.from_pretrained(model_checkpoint)
 
-raw_datasets = load_dataset("xsum",cache_dir="./dataset")
+raw_datasets = load_dataset("xsum")
 metric = load_metric("rouge")
 raw_datasets['train']=raw_datasets['train'].select(range(100))
 raw_datasets['validation']=raw_datasets['validation'].select(range(100))
@@ -78,8 +89,8 @@ model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
     # 
-    output_dir=script_args.model_dir,
-    overwrite_output_dir=True,
+    output_dir="test_summarization",
+#     overwrite_output_dir=True,
 
 
     evaluation_strategy ='steps',
@@ -90,7 +101,7 @@ args = Seq2SeqTrainingArguments(
     save_steps=500,  
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
-
+    max_grad_norm=0,
     # optimizer:
     # learning_rate=3e-5,
     # weight_decay=3e-7,
@@ -146,10 +157,13 @@ trainer = Seq2SeqTrainer(
 
 try:
     trainer.train()
-    trainer.save_model(script_args.model_dir)
+    trainer.save_model('/opt/ml/model')#script_args.output_dir)
 except:
-    wandb.log("error happend while training")    
+    print("training failed")
+#     wandb.log("error happend while training")    
 finally:
-    wandb.finish()
+#     wandb.finish()
+    print("Job termiated ")
+
     # Saves the model to s3; default is /opt/ml/model which SageMaker sends to S3
     
