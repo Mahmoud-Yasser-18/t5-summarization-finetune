@@ -4,23 +4,28 @@ import os
 for i in range(1):
     try:
         os.system("pip install wandb nltk rouge_score datasets SentencePiece")
-        import wandb
     except:
         print ("it's okay")
 
 
+while True:
+    try:
+        import wandb
+        import datasets
+        import random
+        import transformers
 
-import datasets
-import random
-import transformers
-
-import sys
-from datasets import load_dataset, load_metric
-import pandas as pd
-from transformers import AutoTokenizer
-from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-
+        import sys
+        from datasets import load_dataset, load_metric
+        import pandas as pd
+        from transformers import AutoTokenizer
+        from transformers import AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainingArguments, Seq2SeqTrainer
+        from transformers import T5Tokenizer, T5ForConditionalGeneration
+        import nltk
+        import numpy as np
+        break
+    except:
+        continue
 # import argparse
 
 
@@ -36,21 +41,19 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 os.environ['WANDB_API_KEY'] = '87f1f4023fbed40e9c683e5f1d90c5b9bd68ddcf'
 os.environ['WANDB_PROJECT'] = 'huggingface-aws-t5'
-os.environ['TASK_NAME'] = 't5-3b-trail'
+os.environ['TASK_NAME'] = 't5-11b-trail'
 wandb.login()
 
 
-import nltk
 for i in range(1):
     try:
         nltk.download('punkt')
     except:
         print ("it's okay")
 
-import numpy as np
 
 
-model_checkpoint = "t5-3b"
+model_checkpoint = "t5-11b"
 tokenizer = T5Tokenizer.from_pretrained(model_checkpoint)
 
 model = T5ForConditionalGeneration.from_pretrained(model_checkpoint)
@@ -84,21 +87,21 @@ tokenized_datasets = raw_datasets.map(preprocess_function, batched=True)
 
 
 
-batch_size = 4
+batch_size = 2
 model_name = model_checkpoint.split("/")[-1]
 args = Seq2SeqTrainingArguments(
 
-    # 
-    output_dir="test_summarization",
-#     overwrite_output_dir=True,
+    #
+    output_dir="/opt/ml/model/test_summarization",
+    overwrite_output_dir=True,
 
 
     evaluation_strategy ='steps',
-    eval_steps = 500, # Evaluation and Save happens every 10 steps
+    eval_steps = 10, # Evaluation and Save happens every 10 steps
     save_total_limit = 2, # Only last 2 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     save_strategy="steps",
-    save_steps=500,  
+    save_steps=30,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     max_grad_norm=0,
@@ -110,7 +113,7 @@ args = Seq2SeqTrainingArguments(
     # adam_beta2=0.999,
     # Schedular
     # warmup_steps=500,
-    # num_train_epochs=100,
+    num_train_epochs=150,
     report_to="wandb",
     predict_with_generate=True,
     fp16=True
@@ -126,19 +129,19 @@ def compute_metrics(eval_pred):
     # Replace -100 in the labels as we can't decode them.
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
-    
+
     # Rouge expects a newline after each sentence
     decoded_preds = ["\n".join(nltk.sent_tokenize(pred.strip())) for pred in decoded_preds]
     decoded_labels = ["\n".join(nltk.sent_tokenize(label.strip())) for label in decoded_labels]
-    
+
     result = metric.compute(predictions=decoded_preds, references=decoded_labels, use_stemmer=True)
     # Extract a few results
     result = {key: value.mid.fmeasure * 100 for key, value in result.items()}
-    
+
     # Add mean generated length
     prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in predictions]
     result["gen_len"] = np.mean(prediction_lens)
-    
+
     return {k: round(v, 4) for k, v in result.items()}
 
 
@@ -160,10 +163,9 @@ try:
     trainer.save_model('/opt/ml/model')#script_args.output_dir)
 except:
     print("training failed")
-#     wandb.log("error happend while training")    
+#     wandb.log("error happend while training")
 finally:
-#     wandb.finish()
+    wandb.finish()
     print("Job termiated ")
 
     # Saves the model to s3; default is /opt/ml/model which SageMaker sends to S3
-    
