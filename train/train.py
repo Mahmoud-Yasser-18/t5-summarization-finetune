@@ -3,7 +3,7 @@ import os
 
 for i in range(1):
     try:
-        os.system("pip install wandb nltk rouge_score datasets SentencePiece")
+        os.system("bash requirments.sh")
     except:
         print ("it's okay")
 
