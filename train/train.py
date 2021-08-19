@@ -41,7 +41,7 @@ while True:
 
 os.environ['WANDB_API_KEY'] = '87f1f4023fbed40e9c683e5f1d90c5b9bd68ddcf'
 os.environ['WANDB_PROJECT'] = 'huggingface-aws-t5'
-os.environ['TASK_NAME'] = 't5-11b-trail'
+os.environ['TASK_NAME'] = 't5-3b-trail-cpu'
 wandb.login()
 
 
@@ -53,7 +53,7 @@ for i in range(1):
 
 
 
-model_checkpoint = "t5-11b"
+model_checkpoint = "t5-3b"
 tokenizer = T5Tokenizer.from_pretrained(model_checkpoint)
 
 model = T5ForConditionalGeneration.from_pretrained(model_checkpoint)
@@ -98,10 +98,10 @@ args = Seq2SeqTrainingArguments(
 
     evaluation_strategy ='steps',
     eval_steps = 10, # Evaluation and Save happens every 10 steps
-    save_total_limit = 2, # Only last 2 models are saved. Older ones are deleted.
+    save_total_limit = 1, # Only last 2 models are saved. Older ones are deleted.
     load_best_model_at_end=True,
     save_strategy="steps",
-    save_steps=30,
+    save_steps=10,
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     max_grad_norm=0,
@@ -113,7 +113,7 @@ args = Seq2SeqTrainingArguments(
     # adam_beta2=0.999,
     # Schedular
     # warmup_steps=500,
-    num_train_epochs=150,
+    num_train_epochs=20,
     report_to="wandb",
     predict_with_generate=True,
     fp16=True
@@ -160,7 +160,9 @@ trainer = Seq2SeqTrainer(
 
 try:
     trainer.train()
+    print("training success")
     trainer.save_model('/opt/ml/model')#script_args.output_dir)
+
 except:
     print("training failed")
 #     wandb.log("error happend while training")
