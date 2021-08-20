@@ -3,4 +3,4 @@ pip uninstall transformers
 pip uninstall transformers
 pip uninstall transformers
 cd transformers
-pip install -e .
+pip install .
